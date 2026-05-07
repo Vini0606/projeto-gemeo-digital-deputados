@@ -1,0 +1,14 @@
+# Dados locais (Delta Lake, DuckDB, ChromaDB)
+data/
+*.duckdb
+*.parquet
+
+# Variáveis de ambiente
+.env
+
+# Diretórios de build e cache
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/

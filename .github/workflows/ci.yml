@@ -1,0 +1,40 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  quality-check:
+    name: Qualidade e Testes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Instala o uv (extremamente rápido e já lida com o cache)
+      - name: Configurar uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      # Define a versão do Python baseada no pyproject.toml
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+
+      # Instala dependências e o grupo/extra de desenvolvimento (Ruff e Pytest)
+      - name: Instalar dependências (uv sync)
+        run: uv sync --group dev
+
+      - name: Checagem de Linter (Ruff)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Bateria de Testes (Pytest)
+        run: uv run pytest
